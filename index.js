@@ -1,7 +1,7 @@
 import _ from 'lodash/fp.js'
 import { isFalse, neq } from 'understory'
 import humps from 'lodash-humps'
-import { copy, mergeFieldsWith, propDo, setField, setFieldWith } from 'prairie'
+import { addField, copy, mergeFieldsWith, propDo, setField, setFieldWith } from 'prairie'
 import matter from 'gray-matter'
 import { promises as fsxtr } from 'fs-extender'
 import pathParse from 'path-parse'
@@ -59,28 +59,36 @@ const fixFileInfos = (opts) => _.flow(
 const pathLevelProps = _.curry((pathParams, pathParts) => _.zipObject(pathParams, pathParts.slice(0, pathParams.length)))
 
 function saveOutput(opts) {
-  const { keyIndex, outputFilename = 'index', outputDir, parentDir } = opts
-  const getPath = (name, ext = 'json') => `${outputDir}/${parentDir}/${name}.${ext}`
+  const { groupBy, keyIndex, outputFilename, outputDir } = opts
+  const getPath = (name, ext = 'json') => `${outputDir}/${name}.${ext}`
   return (data) => {
-    const collection = _.groupBy('info.collection', data)
-
-    const collections = _.toPairs(collection)
+    const collectionIndex = _.groupBy(groupBy, data)
+    const collections = _.toPairs(collectionIndex)
     return Promise.all([
-      fse.outputJSON(getPath(outputFilename), keyIndex ? collection : data),
+      fse.outputJSON(getPath(outputFilename), keyIndex ? collectionIndex : data),
       ...collections.map(([collectionId, items]) => fse.outputJSON(getPath(collectionId), items)),
     ])
   }
 }
 
-const getOpts = _.defaults({
-  mergePathProps: true,
-  mergeInfo: false,
-  outputDir: 'public',
-  parentDir: 'content',
-  pathProps: ['collection'],
-})
+const getOpts = _.flow(
+  _.defaults({
+    // fields: [
+      // 'base', 'blocks', 'ctime', 'dir', 'ext', 'mtime', 'fileSlug', 'language', 'name', 'pathParts',
+      // 'parentDir', 'path', 'size', 'sourcePath' ],
+    keyIndex: true, // Output an array or an object keyed by collection.
+    // groupBy: 'collection',
+    mergePathProps: true, // Extracted file path properties should be added to top level data. Otherwise within `info.pathProps`.
+    mergeInfo: false,
+    outputDir: 'public',
+    outputFilename: 'index',
+    parentDir: 'content', // Where to find the collections of content.
+    pathProps: ['collection'],
+  }),
+  addField('groupBy', _.get('pathProps[0]'))
+)
 
-function processContent(options) {
+function processContent(options = {}) {
   const opts = getOpts(options)
   const { parentDir, pathProps } = opts
   return fsxtr.list(parentDir)
