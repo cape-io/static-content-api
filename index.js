@@ -5,7 +5,7 @@ import { addField, copy, mergeFieldsWith, propDo, setField, setFieldWith } from 
 import matter from 'gray-matter'
 import { promises as fsxtr } from 'fs-extender'
 import pathParse from 'path-parse'
-import fse from 'fs-extra'
+import { saveData } from './utils.js'
 
 function getFileInfo({ fields, mergePathProps }, info, language) {
   const infoKeep = fields ? _.pick(fields, info) : _.omit(['isDirectory', 'root'], info)
@@ -59,23 +59,33 @@ const fixFileInfos = (opts) => _.flow(
 const pathLevelProps = _.curry((pathParams, pathParts) => _.zipObject(pathParams, pathParts.slice(0, pathParams.length)))
 
 function saveOutput(opts) {
-  const { groupBy, keyIndex, outputFilename, outputDir } = opts
-  const getPath = (name, ext = 'json') => `${outputDir}/${name}.${ext}`
+  const { groupBy, keyIndex, outputFilename } = opts
+  const save = saveData(opts)
   return (data) => {
     const collectionIndex = _.groupBy(groupBy, data)
     const collections = _.toPairs(collectionIndex)
     return Promise.all([
-      fse.outputJSON(getPath(outputFilename), keyIndex ? collectionIndex : data),
-      ...collections.map(([collectionId, items]) => fse.outputJSON(getPath(collectionId), items)),
+      save(outputFilename, keyIndex ? collectionIndex : data),
+      ...collections.map(([collectionId, items]) => save(collectionId, items)),
     ])
   }
 }
 
-const getOpts = _.flow(
+export const getOpts = _.flow(
   _.defaults({
+    customSortVals: {
+      id: '!',
+      info: 'zz',
+    },
+    finalProcessing: _.identity,
+    // fieldSorter: () => {},
+    jsonArgs: {
+      // spaces: 2,
+    },
     // fields: [
       // 'base', 'blocks', 'ctime', 'dir', 'ext', 'mtime', 'fileSlug', 'language', 'name', 'pathParts',
       // 'parentDir', 'path', 'size', 'sourcePath' ],
+    inputHumps: true,
     keyIndex: true, // Output an array or an object keyed by collection.
     // groupBy: 'collection',
     mergePathProps: true, // Extracted file path properties should be added to top level data. Otherwise within `info.pathProps`.
@@ -88,16 +98,18 @@ const getOpts = _.flow(
   addField('groupBy', _.get('pathProps[0]'))
 )
 
-function processContent(options = {}) {
-  const opts = getOpts(options)
-  const { parentDir, pathProps } = opts
+export function processContentWithOpts(opts = {}) {
+  const { finalProcessing, parentDir, pathProps } = opts
   return fsxtr.list(parentDir)
     .then(fixFileInfos(opts))
     .then(_.map(_.flow(
       setFieldWith('pathProps', 'pathParts', pathLevelProps(pathProps)),
       addContent(opts),
+      finalProcessing,
     )))
     .then(saveOutput(opts))
     .then(() => console.log('BUILD DATA: DONE'))
 }
+
+export const processContent = _.flow(getOpts, processContentWithOpts)
 export default processContent

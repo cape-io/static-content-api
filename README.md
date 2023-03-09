@@ -4,6 +4,10 @@ Read directories of markdown and yaml files and output some json. Does not proce
 
 ## Outputs
 
+Keys are sorted so files are more git friendly if tracking changes. Try `jsonArgs: { spaces: 2 }` in options to make commits cleaner.
+
+
+
 ### Summary File
 
 Creates a big file with all the content of all the content types.
@@ -26,18 +30,31 @@ processContent({
 ## Options
 
 ```javascript
+{
+  customSortVals: {
+    id: '!',
+  },
+  // fieldSorter: () => {},
+  jsonArgs: {
+    // spaces: 2,
+  },
   // fields: [
     // 'base', 'blocks', 'ctime', 'dir', 'ext', 'mtime', 'fileSlug', 'language', 'name', 'pathParts',
     // 'parentDir', 'path', 'size', 'sourcePath' ],
   keyIndex: true, // Output an array or an object keyed by collection.
-  groupBy: 'collection',
+  // groupBy: 'collection',
   mergePathProps: true, // Extracted file path properties should be added to top level data. Otherwise within `info.pathProps`.
   mergeInfo: false,
   outputDir: 'public',
   outputFilename: 'index',
   parentDir: 'content', // Where to find the collections of content.
   pathProps: ['collection'],
+}
 ```
+
+## Process specific data files
+
+processDataFile()
 
 ## Other Similar Projects
 
