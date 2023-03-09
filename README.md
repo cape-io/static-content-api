@@ -1,5 +1,28 @@
 # static-content-api
 
+Read directories of markdown and yaml files and output some json. Does not process markdown into html (yet).
+
+## Outputs
+
+### Summary File
+
+Creates a big file with all the content of all the content types.
+
+### Collection Files
+
+A file with just the items from that collection or content type.
+
+## Example Usage
+
+```javascript
+import processContent from "static-content-api";
+
+processContent({
+  parentDir: 'content',
+  outputDir: 'public/data',
+})
+```
+
 ## Options
 
 ```javascript
@@ -21,4 +44,5 @@
 * https://github.com/tscanlin/processmd
 * https://github.com/klaytonfaria/markdown-json
 * https://github.com/eduardoboucas/static-api-generator
+* https://github.com/hellotoby/metalsmith-to-json
 
