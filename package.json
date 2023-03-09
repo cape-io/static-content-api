@@ -1,0 +1,23 @@
+{
+  "name": "static-content-api",
+  "version": "1.0.0",
+  "description": "Take static content directors and turn them into json files.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fs-extender": "^1.0.3",
+    "fs-extra": "^11.1.0",
+    "gray-matter": "^4.0.3",
+    "lodash": "^4.17.21",
+    "lodash-humps": "^3.1.6",
+    "path-parse": "^1.0.7",
+    "prairie": "^4.0.0",
+    "understory": "^2.0.2"
+  }
+}
