@@ -27,7 +27,7 @@ const fixFileInfos = (opts) => _.flow(
     propDo('blocks', neq(0)),
     propDo('isDirectory', isFalse),
   ])),
-
+)
 function saveOutput(opts) {
   const { groupBy, keyIndex, outputFilename } = opts
   const save = saveData(opts)
@@ -68,7 +68,7 @@ export const getOpts = _.flow(
   }),
   addField('groupBy', _.get('pathProps[0]')),
 )
-
+const logOut = (x) => console.log(x) || x
 export function processContentWithOpts(opts = {}) {
   const { finalProcessing, parentDir, pathProps } = opts
   return fsxtr.list(parentDir)
@@ -77,6 +77,7 @@ export function processContentWithOpts(opts = {}) {
       addPathProps(pathProps),
       addContent(opts),
       finalProcessing,
+      // logOut,
     )))
     .then(saveOutput(opts))
     .then(() => console.log('BUILD DATA: DONE'))
