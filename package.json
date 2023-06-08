@@ -24,7 +24,8 @@
     "sort-keys": "^5.0.0",
     "understory": "^2.0.2",
     "unified": "^10.1.2",
-    "unist-util-select": "^4.0.3"
+    "unist-util-select": "^4.0.3",
+    "yaml": "^2.2.2"
   },
   "devDependencies": {
     "eslint": "^8.36.0",

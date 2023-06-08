@@ -1,5 +1,5 @@
 import _ from 'lodash/fp.js'
-import { isFalse, neq } from 'understory'
+import { isFalse, mapP, neq } from 'understory'
 import {
   addField, copy, propDo, setField, setFieldWith,
 } from 'prairie'
@@ -73,12 +73,12 @@ export function processContentWithOpts(opts = {}) {
   const { finalProcessing, parentDir, pathProps } = opts
   return fsxtr.list(parentDir)
     .then(fixFileInfos(opts))
-    .then(_.map(_.flow(
+    .then(mapP(_.flow(
       addPathProps(pathProps),
       addContent(opts),
-      finalProcessing,
       // logOut,
     )))
+    .then(finalProcessing)
     .then(saveOutput(opts))
     .then(() => console.log('BUILD DATA: DONE'))
 }
