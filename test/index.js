@@ -7,4 +7,5 @@ processContent({
     spaces: 2,
   },
   mergeInfo: false,
+  keyIndex: true,
 })
