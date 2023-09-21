@@ -1,12 +1,10 @@
 # static-content-api
 
-Read directories of markdown and yaml files and output some json. Does not process markdown into html (yet).
+Read directories of markdown and yaml files and output some json. Does not process markdown into html (yet?).
 
 ## Outputs
 
 Keys are sorted so files are more git friendly if tracking changes. Try `jsonArgs: { spaces: 2 }` in options to make commits cleaner.
-
-
 
 ### Summary File
 

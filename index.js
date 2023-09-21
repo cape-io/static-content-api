@@ -68,7 +68,7 @@ export const getOpts = _.flow(
   }),
   addField('groupBy', _.get('pathProps[0]')),
 )
-const logOut = (x) => console.log(x) || x
+// const logOut = (x) => console.log(x) || x
 export function processContentWithOpts(opts = {}) {
   const { finalProcessing, parentDir, pathProps } = opts
   return fsxtr.list(parentDir)
