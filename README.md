@@ -49,6 +49,7 @@ processContent({
     // 'parentDir', 'path', 'size', 'sourcePath' ],
   keyIndex: true, // Output "Summary File" an array or an object keyed by collection.
   // groupBy: 'collection',
+  ignoreDirs: ['/.config'],
   mergePathProps: true, // Extracted file path properties should be added to top level data. Otherwise within `info.pathProps`.
   mergeInfo: false,
   outputDir: 'public',

@@ -28,6 +28,7 @@ const fixFileInfos = (opts) => _.flow(
     propDo('path', isNotDotFile),
     propDo('blocks', neq(0)),
     propDo('isDirectory', isFalse),
+    propDo('dir', (x) => !opts.ignoreDirs.includes(x)),
   ])),
 )
 
@@ -67,6 +68,7 @@ export const getOpts = _.flow(
     // 'fileSlug', 'language', 'name', 'pathParts',
     // 'parentDir', 'path', 'size', 'sourcePath' ],
     inputHumps: true,
+    ignoreDirs: ['/.config'],
     keyIndex: true, // Output an array or an object keyed by collection.
     // groupBy: 'collection',
     mergePathProps: true, // Extracted file path props in root. Otherwise within `info.pathProps`.
@@ -83,6 +85,7 @@ export function processContentWithOpts(opts = {}) {
   const { finalProcessing, parentDir, pathProps } = opts
   return fsxtr.list(parentDir)
     .then(fixFileInfos(opts))
+    .then((x) => console.log(x) || x)
     .then(mapP(_.flow(
       addPathProps(pathProps),
       addContent(opts),
