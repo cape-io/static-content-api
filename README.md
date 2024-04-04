@@ -6,13 +6,21 @@ Read directories of markdown and yaml files and output some json. Does not proce
 
 Keys are sorted so files are more git friendly if tracking changes. Try `jsonArgs: { spaces: 2 }` in options to make commits cleaner.
 
-### Summary File
+### Index Summary File
 
 Creates a big file with all the content of all the content types.
 
 ### Collection Files
 
 A file with just the items from that collection or content type.
+
+### Schema File
+
+Creates a json-schema file based on the input.
+
+### OpenAPI File
+
+Future: Creates an openapi file based on the input.
 
 ## Example Usage
 
@@ -39,7 +47,7 @@ processContent({
   // fields: [
     // 'base', 'blocks', 'ctime', 'dir', 'ext', 'mtime', 'fileSlug', 'language', 'name', 'pathParts',
     // 'parentDir', 'path', 'size', 'sourcePath' ],
-  keyIndex: true, // Output an array or an object keyed by collection.
+  keyIndex: true, // Output "Summary File" an array or an object keyed by collection.
   // groupBy: 'collection',
   mergePathProps: true, // Extracted file path properties should be added to top level data. Otherwise within `info.pathProps`.
   mergeInfo: false,

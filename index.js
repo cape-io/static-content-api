@@ -4,6 +4,8 @@ import {
   addField, copy, propDo, setField, setFieldWith,
 } from 'prairie'
 import { promises as fsxtr } from 'fs-extender'
+import { createCompoundSchema } from 'genson-js'
+
 import { saveData } from './lib/utils.js'
 import { addPathInfo, addPathProps } from './lib/path.js'
 import { addContent } from './lib/content.js'
@@ -28,6 +30,14 @@ const fixFileInfos = (opts) => _.flow(
     propDo('isDirectory', isFalse),
   ])),
 )
+
+function saveCollection(save) {
+  return ([collectionId, items]) => Promise.all([
+    save(collectionId, items),
+    save(`${collectionId}.schema`, createCompoundSchema(items)),
+  ])
+}
+
 function saveOutput(opts) {
   const { groupBy, keyIndex, outputFilename } = opts
   const save = saveData(opts)
@@ -36,7 +46,7 @@ function saveOutput(opts) {
     const collections = _.toPairs(collectionIndex)
     return Promise.all([
       save(outputFilename, keyIndex ? collectionIndex : data),
-      ...collections.map(([collectionId, items]) => save(collectionId, items)),
+      ...collections.map(saveCollection(save)),
     ])
   }
 }
