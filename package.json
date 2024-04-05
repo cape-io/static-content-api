@@ -1,6 +1,6 @@
 {
   "name": "static-content-api",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Take static content directories and turn them into json files.",
   "main": "index.js",
   "type": "module",
