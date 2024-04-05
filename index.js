@@ -14,11 +14,7 @@ const getFileSlugDefault = ({ base, ext }) => _.flow(_.replace(ext, ''), _.kebab
 
 function filterDirs(ignoreDirs) {
   if (!_.isArray(ignoreDirs)) return _.stubTrue
-  console.log(ignoreDirs)
-  return (dir) => {
-    console.log(dir)
-    return !ignoreDirs.includes(dir)
-  }
+  return (dir) => !ignoreDirs.includes(dir)
 }
 
 const fixFileInfo = ({ getFileSlug, parentDir }) => _.flow(
