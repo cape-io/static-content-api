@@ -12,6 +12,15 @@ import { addContent } from './lib/content.js'
 
 const getFileSlugDefault = ({ base, ext }) => _.flow(_.replace(ext, ''), _.kebabCase)(base)
 
+function filterDirs(ignoreDirs) {
+  if (!_.isArray(ignoreDirs)) return _.stubTrue
+  console.log(ignoreDirs)
+  return (dir) => {
+    console.log(dir)
+    return !ignoreDirs.includes(dir)
+  }
+}
+
 const fixFileInfo = ({ getFileSlug, parentDir }) => _.flow(
   setFieldWith('isDirectory', 'stats', (x) => x.isDirectory()),
   copy('path', 'sourcePath'),
@@ -28,7 +37,8 @@ const fixFileInfos = (opts) => _.flow(
     propDo('path', isNotDotFile),
     propDo('blocks', neq(0)),
     propDo('isDirectory', isFalse),
-    propDo('dir', (x) => !opts.ignoreDirs.includes(x)),
+    opts.requireDir ? propDo('dir', neq('')) : _.stubTrue,
+    propDo('pathParts[0]', filterDirs(opts.ignoreDirs)),
   ])),
 )
 
@@ -68,7 +78,7 @@ export const getOpts = _.flow(
     // 'fileSlug', 'language', 'name', 'pathParts',
     // 'parentDir', 'path', 'size', 'sourcePath' ],
     inputHumps: true,
-    ignoreDirs: ['/.config'],
+    // ignoreDirs: ['foo', 'ignore', 'config'],
     keyIndex: true, // Output an array or an object keyed by collection.
     // groupBy: 'collection',
     mergePathProps: true, // Extracted file path props in root. Otherwise within `info.pathProps`.
@@ -77,6 +87,7 @@ export const getOpts = _.flow(
     outputFilename: 'index',
     parentDir: 'content', // Where to find the collections of content.
     pathProps: ['collection'],
+    requireDir: false, // Do not process files in the root, without being in a collection.
   }),
   addField('groupBy', _.get('pathProps[0]')),
 )

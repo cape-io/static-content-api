@@ -49,13 +49,14 @@ processContent({
     // 'parentDir', 'path', 'size', 'sourcePath' ],
   keyIndex: true, // Output "Summary File" an array or an object keyed by collection.
   // groupBy: 'collection',
-  ignoreDirs: ['/.config'],
+  ignoreDirs: ['foo', 'ignore', 'config'], // Ignore root directories/collections.
   mergePathProps: true, // Extracted file path properties should be added to top level data. Otherwise within `info.pathProps`.
   mergeInfo: false, // Merge in file information or false to leave it inside the `info` property.
   outputDir: 'public',
   outputFilename: 'index',
   parentDir: 'content', // Where to find the collections of content.
   pathProps: ['collection'],
+  requireDir: false, // Do not process files in the root, without being in a collection.
 }
 ```
 
