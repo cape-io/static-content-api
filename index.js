@@ -85,7 +85,7 @@ export function processContentWithOpts(opts = {}) {
   const { finalProcessing, parentDir, pathProps } = opts
   return fsxtr.list(parentDir)
     .then(fixFileInfos(opts))
-    .then((x) => console.log(x) || x)
+    // .then((x) => console.log(x) || x)
     .then(mapP(_.flow(
       addPathProps(pathProps),
       addContent(opts),

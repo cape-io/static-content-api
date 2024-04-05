@@ -38,7 +38,7 @@ processContent({
 ```javascript
 {
   customSortVals: {
-    id: '!',
+    id: '!', // used to assign a custom relative sort position.
   },
   // fieldSorter: () => {},
   jsonArgs: {
@@ -51,7 +51,7 @@ processContent({
   // groupBy: 'collection',
   ignoreDirs: ['/.config'],
   mergePathProps: true, // Extracted file path properties should be added to top level data. Otherwise within `info.pathProps`.
-  mergeInfo: false,
+  mergeInfo: false, // Merge in file information or false to leave it inside the `info` property.
   outputDir: 'public',
   outputFilename: 'index',
   parentDir: 'content', // Where to find the collections of content.
