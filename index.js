@@ -33,9 +33,11 @@ const fixFileInfos = (opts) => _.flow(
     propDo('path', isNotDotFile),
     propDo('blocks', neq(0)),
     propDo('isDirectory', isFalse),
-    opts.requireDir ? propDo('dir', neq('')) : _.stubTrue,
+    opts.requireDir ? propDo('dir', neq('')) : null,
+    opts.requireExt ? propDo('ext', neq('')) : null,
+    opts.ignoreDotFiles ? propDo('base', (x) => !x.startsWith('.')) : null,
     propDo('pathParts[0]', filterDirs(opts.ignoreDirs)),
-  ])),
+  ].filter(_.isFunction))),
 )
 
 function saveCollection(save) {
@@ -75,6 +77,7 @@ export const getOpts = _.flow(
     // 'parentDir', 'path', 'size', 'sourcePath' ],
     inputHumps: true,
     // ignoreDirs: ['foo', 'ignore', 'config'],
+    ignoreDotFiles: true,
     keyIndex: true, // Output an array or an object keyed by collection.
     // groupBy: 'collection',
     mergePathProps: true, // Extracted file path props in root. Otherwise within `info.pathProps`.
@@ -84,6 +87,7 @@ export const getOpts = _.flow(
     parentDir: 'content', // Where to find the collections of content.
     pathProps: ['collection'],
     requireDir: false, // Do not process files in the root, without being in a collection.
+    requireExt: true,
   }),
   addField('groupBy', _.get('pathProps[0]')),
 )

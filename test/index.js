@@ -10,4 +10,6 @@ processContent({
   mergeInfo: false,
   keyIndex: true,
   requireDir: true,
+  requireExt: true,
+  ignoreDotFiles: true,
 })
